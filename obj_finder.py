@@ -50,7 +50,7 @@ class ObjFinder(object):
         print self.index
 
         self.find_build_numbers()
-        self.sync_objects_files()
+        #self.sync_objects_files()
 
 
     def sync_from_server(self):
