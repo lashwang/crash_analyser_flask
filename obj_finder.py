@@ -10,6 +10,8 @@ import os
 import os.path
 
 import urllib
+import time
+
 
 logger = logging.getLogger(__name__)
 
@@ -142,6 +144,17 @@ class ObjFinder(object):
             if v == self.version_code:
                 self.build_number_list.append(k)
 
+    def dlProgress(self,count, blockSize, totalSize):
+        global start_time
+        if count == 0:
+            start_time = time.time()
+            return
+        duration = time.time() - start_time
+        progress_size = int(count * blockSize)
+        speed = int(progress_size / (1024 * duration))
+        percent = int(count * blockSize * 100 / totalSize)
+        print("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
+                         (percent, progress_size / (1024 * 1024), speed, duration))
 
 
     def sync_objects_files(self):
@@ -153,10 +166,14 @@ class ObjFinder(object):
 
             else:
                 url = class_.OBJ_URL_FORMAT.format(index,class_.ENGINE_OBJ_NAMES)
-                urllib.urlretrieve(url, os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES))
+                urllib.urlretrieve(url,
+                                   os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES + '.temp'),
+                                   self.dlProgress)
 
                 url = class_.OBJ_URL_FORMAT.format(index,class_.PROXY_OBJ_NAMES)
-                urllib.urlretrieve(url, os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES))
+                urllib.urlretrieve(url,
+                                   os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES + '.temp'),
+                                   self.dlProgress)
 
 
 
