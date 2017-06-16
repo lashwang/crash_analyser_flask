@@ -4,6 +4,8 @@ import logging
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+import json
+import arrow
 
 
 logger = logging.getLogger(__name__)
@@ -15,9 +17,10 @@ class ObjFinder(object):
     URL = 'http://10.10.10.22:8080/job/adclear_2_0/'
     URL_BASE = 'http://10.10.10.22:8080'
 
-    def __init__(self,version_code = 0):
+    def __init__(self,version_code = 0,index_file = "index.json"):
         self.version_code = version_code
-
+        self.index = {}
+        self.index_file = index_file
 
 
     def sync_from_server(self):
@@ -42,8 +45,10 @@ class ObjFinder(object):
                 version_code = self.parse_version_code(url)
             except Exception:
                 continue
-            print build_number,version_code
+            #print build_number,version_code
+            self.index[build_number] = version_code
 
+        print self.index
 
 
     def parse_version_code(self, url):
@@ -61,3 +66,18 @@ class ObjFinder(object):
 
         return version_code
 
+    def save_index_file(self):
+        date = arrow.now().format('YYYY-MM-DD')
+        raw_data = {}
+        raw_data['update'] = date
+        raw_data['index'] = self.index
+        data = json.dumps(raw_data)
+        with open(self.index_file, 'w') as outfile:
+            json.dump(data, outfile)
+
+    def load_index_file(self):
+        with open(self.index_file) as data_file:
+            data = json.loads(json.load(data_file))
+
+        self.index_update_time = arrow.get(data['update'],'YYYY-MM-DD')
+        self.index = data['index']
