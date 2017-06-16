@@ -3,3 +3,4 @@ arrow
 flask
 requests
 bs4
+lxml
