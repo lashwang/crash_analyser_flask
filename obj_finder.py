@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import requests
-import pandas as pd
 from bs4 import BeautifulSoup
 import json
 import arrow
