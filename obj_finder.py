@@ -6,7 +6,10 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import json
 import arrow
+import os
+import os.path
 
+import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -14,19 +17,53 @@ logger = logging.getLogger(__name__)
 
 class ObjFinder(object):
 
+    '''
+    http://10.10.10.22:8080/job/adclear_2_0/lastSuccessfulBuild/artifact/adclear/build/outputs/engine_objs.tar.bz2
+    http://10.10.10.22:8080/job/adclear_2_0/lastSuccessfulBuild/artifact/adclear/build/outputs/proxy_objs.tar.bz2
+    '''
+
+
     URL = 'http://10.10.10.22:8080/job/adclear_2_0/'
     URL_BASE = 'http://10.10.10.22:8080'
 
+    CACHE_FOLDER = 'caches'
+
+    OBJ_URL_FORMAT = 'http://10.10.10.22:8080/job/adclear_2_0/{}/artifact/adclear/build/outputs/{}'
+
+    ENGINE_OBJ_NAMES = 'engine_objs.tar.bz2'
+    PROXY_OBJ_NAMES = 'proxy_objs.tar.bz2'
+
+
+
     def __init__(self,version_code = 0,index_file = "index.json"):
-        self.version_code = version_code
+        self.version_code = int(version_code)
         self.index = {}
         self.index_file = index_file
+        self.sync_from_server()
+        try:
+            os.mkdir(self.__class__.CACHE_FOLDER)
+        except Exception,error:
+            print error
+
+        print self.index
+
+        self.find_build_numbers()
+        self.sync_objects_files()
 
 
     def sync_from_server(self):
         try:
+            self.load_index_file()
+
+            if not self.is_index_file_out_date():
+                return
+        except Exception,error:
+            print error
+
+        try:
             r = requests.get(self.__class__.URL)
             self.parse_jenkins_main_page(r.content)
+            self.save_index_file()
         except Exception,error:
             print error
 
@@ -46,9 +83,9 @@ class ObjFinder(object):
             except Exception:
                 continue
             #print build_number,version_code
-            self.index[build_number] = version_code
+            self.index[build_number] = int(version_code)
 
-        print self.index
+
 
 
     def parse_version_code(self, url):
@@ -79,5 +116,47 @@ class ObjFinder(object):
         with open(self.index_file) as data_file:
             data = json.loads(json.load(data_file))
 
+
+
+
         self.index_update_time = arrow.get(data['update'],'YYYY-MM-DD')
         self.index = data['index']
+
+
+
+    def is_index_file_out_date(self):
+        now = arrow.now().format('YYYY-MM-DD')
+        old_time = (self.index_update_time).replace(days=+1).format('YYYY-MM-DD')
+
+        if now >= old_time:
+            return True
+
+        return False
+
+
+
+    def find_build_numbers(self):
+        self.build_number_list = []
+
+        for k,v in self.index.iteritems():
+            if v == self.version_code:
+                self.build_number_list.append(k)
+
+
+
+    def sync_objects_files(self):
+        class_ = self.__class__
+        for index in self.build_number_list:
+            if os.path.isfile(os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES)) \
+                and os.path.isfile(os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES)):
+                continue
+
+            else:
+                url = class_.OBJ_URL_FORMAT.format(index,class_.ENGINE_OBJ_NAMES)
+                urllib.urlretrieve(url, os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES))
+
+                url = class_.OBJ_URL_FORMAT.format(index,class_.PROXY_OBJ_NAMES)
+                urllib.urlretrieve(url, os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES))
+
+
+
