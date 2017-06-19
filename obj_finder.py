@@ -10,7 +10,7 @@ import os.path
 
 import urllib
 import time
-
+import tarfile
 
 logger = logging.getLogger(__name__)
 
@@ -161,6 +161,7 @@ class ObjFinder(object):
     def sync_objects_files(self):
         class_ = self.__class__
         for index in self.build_number_list:
+            local_build_path = os.path.join(class_.CACHE_FOLDER,index)
             obj_path = class_.OBJ_PATH_FORMAT.format(index)
             engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
             proxy_obj_path = os.path.join(obj_path, class_.PROXY_OBJ_NAMES)
@@ -169,6 +170,23 @@ class ObjFinder(object):
 
             if not os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path):
                 raise ValueError
+
+            # extract engine file
+            with tarfile.open(engine_obj_path, 'r:bz2') as tar:
+                subdir_and_files = [
+                    tarinfo for tarinfo in tar.getmembers()
+                    if 'liboc_engine.so' in tarinfo.name
+                ]
+                tar.extractall(members=subdir_and_files,path=local_build_path)
+
+            # extract proxy file
+            with tarfile.open(proxy_obj_path, 'r:bz2') as tar:
+                subdir_and_files = [
+                    tarinfo for tarinfo in tar.getmembers()
+                    if 'libproxy.so' in tarinfo.name
+                ]
+                tar.extractall(members=subdir_and_files,path=local_build_path)
+
 
 
 
