@@ -91,8 +91,11 @@ class ObjFinder(object):
 
     def parse_jenkins_local_file(self):
         next_build_number = commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')[1]
+        apk_path_format = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/apk/'
+        for i in range(next_build_number-150,next_build_number):
+            apk_file_list = commands.getstatusoutput('ls {}'.format(apk_path_format.format(i)))[0]
+            print apk_file_list
 
-        print next_build_number
 
 
     def parse_version_code(self, url):
@@ -174,7 +177,7 @@ class ObjFinder(object):
             engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
             proxy_obj_path = os.path.join(obj_path, class_.PROXY_OBJ_NAMES)
 
-            print engine_obj_path,proxy_obj_path
+            #print engine_obj_path,proxy_obj_path
 
             if not (os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path)):
                 raise ValueError
@@ -208,8 +211,8 @@ class ObjFinder(object):
         lib_engine_path = os.path.join(local_build_path,'liboc_engine.so')
         lib_proxy_path = os.path.join(local_build_path,'libproxy.so')
 
-        print os.path.lexists(lib_engine_path),lib_engine_path
-        print os.path.lexists(lib_proxy_path),lib_proxy_path
+        #print os.path.lexists(lib_engine_path),lib_engine_path
+        #print os.path.lexists(lib_proxy_path),lib_proxy_path
 
         return (os.path.lexists(lib_engine_path) and os.path.lexists(lib_proxy_path))
 
