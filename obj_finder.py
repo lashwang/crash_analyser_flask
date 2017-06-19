@@ -89,7 +89,10 @@ class ObjFinder(object):
             #print build_number,version_code
             self.index[build_number] = int(version_code)
 
+    def parse_jenkins_local_file(self):
+        next_build_number = commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')[0]
 
+        print next_build_number
 
 
     def parse_version_code(self, url):
@@ -220,11 +223,21 @@ class ObjFinder(object):
             return os.path.join(local_build_path,'engine/src/main/obj/local/armeabi/liboc_engine.so')
 
 
+        raise ValueError(type)
+
 
     def query_address(self,type,address_list):
+        query_result = {}
         for build_number in self.build_number_list:
             so_path = self.get_engine_so_full_path(build_number,type)
-            query_result = commands.getstatusoutput('./addr2line_android -f -e {} {}'.format(so_path,address_list))
+            cmd_result = commands.getstatusoutput('./addr2line_android -f -e {} {}'.format(so_path,address_list))
             print build_number
-            print query_result
+            print cmd_result
+            query_result[build_number] = cmd_result[1]
+
+
+        return query_result
+
+
+
 

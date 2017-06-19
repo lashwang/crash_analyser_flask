@@ -13,7 +13,7 @@ def hello_world():
 
 @app.route('/query')
 def query():
-    usage_info = "Unknown parameter, usage: \"/query?t=[engine or proxy]&v=[version code]&a=[address list, like:0x11000,0x20000]\""
+    usage_info = "Unknown parameter, usage: \"http://10.10.10.22:8088/query/query?t=[engine or proxy]&v=[version code]&a=[address list, like:0x11000,0x20000]\""
     args = request.args
     keys = args.keys()
     query_result = ''
