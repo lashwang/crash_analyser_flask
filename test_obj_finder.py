@@ -6,6 +6,8 @@ import tarfile
 class MyTestCase(unittest.TestCase):
     def test_something(self):
         obj_finder = ObjFinder(version_code='700504862',index_file='test.json')
+        obj_finder.query_address('engine','118f2,10101')
+
 
     @unittest.skip("skip")
     def testTarFile(self):
