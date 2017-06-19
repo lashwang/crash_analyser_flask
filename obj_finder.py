@@ -178,6 +178,8 @@ class ObjFinder(object):
                     if 'liboc_engine.so' in tarinfo.name
                 ]
                 tar.extractall(members=subdir_and_files,path=local_build_path)
+            engine_so_path = os.path.join(local_build_path,'engine/src/main/obj/local/armeabi/liboc_engine.so')
+            os.system('ln -s {} liboc_engine.so'.format(engine_so_path))
 
             # extract proxy file
             with tarfile.open(proxy_obj_path, 'r:bz2') as tar:
@@ -187,7 +189,7 @@ class ObjFinder(object):
                 ]
                 tar.extractall(members=subdir_and_files,path=local_build_path)
 
-
-
+            proxy_so_path = os.path.join(local_build_path,'proxy/src/main/obj/local/armeabi/libproxy.so')
+            os.system('ln -s {} libproxy.so'.format(proxy_so_path))
 
 
