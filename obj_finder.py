@@ -92,8 +92,8 @@ class ObjFinder(object):
     def parse_jenkins_local_file(self):
         next_build_number = int(commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')[1])
         apk_path_format = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/apk/'
-        for i in range(next_build_number-150,next_build_number):
-            apk_file_list = commands.getstatusoutput('ls {}'.format(apk_path_format.format(i)))[0]
+        for i in range(next_build_number-100,next_build_number):
+            apk_file_list = commands.getstatusoutput('ls {}'.format(apk_path_format.format(i)))[1]
             print apk_file_list
 
 
