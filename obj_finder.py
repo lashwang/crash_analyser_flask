@@ -97,12 +97,9 @@ class ObjFinder(object):
             code = output[0]
             if code == 0:
                 apk_file_name = output[1].split('\n')[0]
-                print i
-                print apk_file_name
-
-
-
-
+                version_code = apk_file_name.split('_')[4]
+                version_code = version_code.replace('.','')
+                print i,version_code
 
     def parse_version_code(self, url):
         r = requests.get(url)
