@@ -49,7 +49,7 @@ class ObjFinder(object):
         except Exception,error:
             print error
 
-        print self.index
+        #print self.index
 
         self.find_build_numbers()
         self.sync_objects_files()
