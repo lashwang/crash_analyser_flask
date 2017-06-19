@@ -34,6 +34,8 @@ class ObjFinder(object):
     ENGINE_OBJ_NAMES = 'engine_objs.tar.bz2'
     PROXY_OBJ_NAMES = 'proxy_objs.tar.bz2'
 
+    OBJ_PATH_FORMAT = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/'
+
 
 
     def __init__(self,version_code = 0,index_file = "index.json"):
@@ -49,7 +51,7 @@ class ObjFinder(object):
         print self.index
 
         self.find_build_numbers()
-        #self.sync_objects_files()
+        self.sync_objects_files()
 
 
     def sync_from_server(self):
@@ -159,20 +161,15 @@ class ObjFinder(object):
     def sync_objects_files(self):
         class_ = self.__class__
         for index in self.build_number_list:
-            if os.path.isfile(os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES)) \
-                and os.path.isfile(os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES)):
-                continue
+            obj_path = class_.OBJ_PATH_FORMAT.format(index)
+            engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
+            proxy_obj_path = os.path.join(obj_path, class_.PROXY_OBJ_NAMES)
 
-            else:
-                url = class_.OBJ_URL_FORMAT.format(index,class_.ENGINE_OBJ_NAMES)
-                urllib.urlretrieve(url,
-                                   os.path.join(class_.CACHE_FOLDER,class_.ENGINE_OBJ_NAMES + '.temp'),
-                                   self.dlProgress)
+            print engine_obj_path,proxy_obj_path
 
-                url = class_.OBJ_URL_FORMAT.format(index,class_.PROXY_OBJ_NAMES)
-                urllib.urlretrieve(url,
-                                   os.path.join(class_.CACHE_FOLDER,class_.PROXY_OBJ_NAMES + '.temp'),
-                                   self.dlProgress)
+            if not os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path):
+                raise ValueError
+
 
 
 
