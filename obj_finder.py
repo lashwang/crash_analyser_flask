@@ -65,8 +65,9 @@ class ObjFinder(object):
             print error
 
         try:
-            r = requests.get(self.__class__.URL)
-            self.parse_jenkins_main_page(r.content)
+            #r = requests.get(self.__class__.URL)
+            #self.parse_jenkins_main_page(r.content)
+            self.parse_jenkins_local_file()
             self.save_index_file()
         except Exception,error:
             print error
@@ -99,7 +100,8 @@ class ObjFinder(object):
                 apk_file_name = output[1].split('\n')[0]
                 version_code = apk_file_name.split('_')[4]
                 version_code = version_code.replace('.','')
-                print i,version_code
+                #print i,version_code
+                self.index[i] = int(version_code)
 
     def parse_version_code(self, url):
         r = requests.get(url)
