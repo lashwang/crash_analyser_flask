@@ -161,6 +161,9 @@ class ObjFinder(object):
     def sync_objects_files(self):
         class_ = self.__class__
         for index in self.build_number_list:
+            if self.check_lib_file_exist(index):
+                print 'lib file for {} exist'.format(index)
+                continue
             local_build_path = os.path.join(class_.CACHE_FOLDER,index)
             obj_path = class_.OBJ_PATH_FORMAT.format(index)
             engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
@@ -193,3 +196,12 @@ class ObjFinder(object):
             os.system('ln -s {} {}'.format(proxy_so_path,os.path.join(local_build_path,'libproxy.so')))
 
 
+    def check_lib_file_exist(self,build_number):
+        class_ = self.__class__
+        local_build_path = os.path.join(class_.CACHE_FOLDER, build_number)
+
+        lib_engine_path = os.path.join(local_build_path,'liboc_engine.so')
+        lib_proxy_path = os.path.join(local_build_path,'libproxy.so')
+
+
+        return (os.path.exists(lib_engine_path) and os.path.exists(lib_proxy_path))
