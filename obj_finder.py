@@ -204,7 +204,7 @@ class ObjFinder(object):
         lib_engine_path = os.path.join(local_build_path,'liboc_engine.so')
         lib_proxy_path = os.path.join(local_build_path,'libproxy.so')
 
-        print os.path.exists(lib_engine_path),lib_engine_path
-        print os.path.exists(lib_proxy_path),lib_proxy_path
+        print os.path.lexists(lib_engine_path),lib_engine_path
+        print os.path.lexists(lib_proxy_path),lib_proxy_path
 
-        return (os.path.exists(lib_engine_path) and os.path.exists(lib_proxy_path))
+        return (os.path.lexists(lib_engine_path) and os.path.lexists(lib_proxy_path))
