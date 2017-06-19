@@ -11,6 +11,8 @@ import os.path
 import urllib
 import time
 import tarfile
+import subprocess
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,6 @@ class ObjFinder(object):
     PROXY_OBJ_NAMES = 'proxy_objs.tar.bz2'
 
     OBJ_PATH_FORMAT = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/'
-
 
 
     def __init__(self,version_code = 0,index_file = "index.json"):
@@ -208,3 +209,21 @@ class ObjFinder(object):
         print os.path.lexists(lib_proxy_path),lib_proxy_path
 
         return (os.path.lexists(lib_engine_path) and os.path.lexists(lib_proxy_path))
+
+
+    def get_engine_so_full_path(self,build_number,type):
+        class_ = self.__class__
+        local_build_path = os.path.join(class_.CACHE_FOLDER, build_number)
+        if type == 'proxy':
+            return os.path.join(local_build_path,'proxy/src/main/obj/local/armeabi/libproxy.so')
+        elif type == 'engine':
+            return os.path.join(local_build_path,'engine/src/main/obj/local/armeabi/liboc_engine.so')
+
+
+
+    def query_address(self,type,address_list):
+        for build_number in self.build_number_list:
+            so_path = self.get_engine_so_full_path(build_number,type)
+            query_result = subprocess.check_output(['addr2line', '-f','-e',so_path,address_list])
+            print query_result
+
