@@ -90,7 +90,7 @@ class ObjFinder(object):
             self.index[build_number] = int(version_code)
 
     def parse_jenkins_local_file(self):
-        next_build_number = commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')[0]
+        next_build_number = commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')
 
         print next_build_number
 
