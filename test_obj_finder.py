@@ -6,8 +6,8 @@ import tarfile
 class MyTestCase(unittest.TestCase):
     def test_something(self):
         obj_finder = ObjFinder(version_code='700504862',index_file='test.json')
-        obj_finder.query_address('proxy','1189f8')
-
+        #obj_finder.query_address('proxy','1189f8')
+        obj_finder.parse_jenkins_local_file()
 
     @unittest.skip("skip")
     def testTarFile(self):
