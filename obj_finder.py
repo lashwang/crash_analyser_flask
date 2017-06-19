@@ -168,7 +168,7 @@ class ObjFinder(object):
 
             print engine_obj_path,proxy_obj_path
 
-            if not os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path):
+            if not (os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path)):
                 raise ValueError
 
             # extract engine file
