@@ -224,7 +224,7 @@ class ObjFinder(object):
     def query_address(self,type,address_list):
         for build_number in self.build_number_list:
             so_path = self.get_engine_so_full_path(build_number,type)
-            query_result = commands.getstatusoutput('addr2line -f -e {} {}'.format(so_path,address_list))
+            query_result = commands.getstatusoutput('addr2line_android -f -e {} {}'.format(so_path,address_list))
             print build_number
             print query_result
 
