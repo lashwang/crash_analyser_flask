@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Enter names in the fields, then click "Submit" to submit the form:</p>
+
+<form id="frm1" action="/query">
+  Version Code: <input type="text" name="v"><br>
+  Lib Name: <input type="text" name="t"><br>
+  Crash Address: <input type="text" name="a"><br>
+  <input type="button" onclick="myFunction()" value="query">
+</form>
+
+<script>
+function myFunction() {
+    document.getElementById("frm1").submit();
+}
+</script>
+
+</body>
+</html>
