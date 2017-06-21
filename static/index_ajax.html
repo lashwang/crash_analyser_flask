@@ -1,0 +1,27 @@
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+
+    <script>
+        // wait for the DOM to be loaded
+        $(function () {
+            // bind 'myForm' and provide a simple callback function
+            $('#myForm').ajaxForm(function () {
+                alert("Thank you for your comment!");
+            });
+        });
+    </script>
+</head>
+<form id="myForm" action="/query">
+  Version Code: <input type="text" name="v"><br>
+  Lib Name:
+  	<select name="t">
+  		<option selected="selected">engine</option>
+  		<option>proxy</option>
+	</select><br>
+  Crash Address: <input type="text" name="a"><br>
+  <input type="submit" value="query">
+</form>
+
+</html>
