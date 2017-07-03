@@ -229,15 +229,27 @@ class ObjFinder(object):
             return os.path.join(local_build_path,'proxy/src/main/obj/local/armeabi/libproxy.so')
         elif type == 'engine':
             return os.path.join(local_build_path,'engine/src/main/obj/local/armeabi/liboc_engine.so')
-
-
         raise ValueError(type)
+
+    def get_engine_so_full_path_v2(self,build_number,type):
+        class_ = self.__class__
+        local_build_path = os.path.join(class_.CACHE_FOLDER, build_number)
+        if type == 'proxy':
+            return os.path.join(local_build_path,'proxy/build/intermediates/ndkBuild/release/obj/local/armeabi/libproxy.so')
+        elif type == 'engine':
+            return os.path.join(local_build_path,'engine/build/intermediates/ndkBuild/release/obj/local/armeabi/liboc_engine.so')
+        raise ValueError(type)
+
+
 
 
     def query_address(self,type,address_list):
         query_result = {}
         for build_number in self.build_number_list:
             so_path = self.get_engine_so_full_path(build_number,type)
+            if not os.path.exists(so_path):
+                so_path = self.get_engine_so_full_path_v2(build_number,type)
+                
             cmd_result = commands.getstatusoutput('./addr2line_android -p -C -i -f -e {} {}'.format(so_path,address_list))
             print build_number
             print cmd_result
