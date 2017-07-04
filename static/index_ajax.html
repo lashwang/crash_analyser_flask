@@ -26,6 +26,7 @@
                     // inside event callbacks 'this' is the DOM element so we first
                     // wrap it in a jQuery object and then invoke ajaxSubmit
                     $(this).ajaxSubmit(options);
+                    $("#loader").show();
 
                     // !!! Important !!!
                     // always return false to prevent standard browser submit and page navigation
@@ -65,6 +66,7 @@
 
                 //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +
                 //     '\n\nThe output div should have already been updated with the responseText.');
+                $("#loader").hide();
             }
     </script>
 </head>
@@ -78,7 +80,10 @@
   		<option>proxy</option>
 	</select><br>
   Crash Address: <input type="text" name="a"><br>
+    <span>
   <input type="submit" value="query">
+    <label><img id="loader" style="display: none;" src="/static/loading.gif"/></label>
+    </span>
 </form>
 <div id="queryResult"></div>
 </body>
