@@ -20,6 +20,8 @@ def query():
     args = request.args
     keys = args.keys()
 
+    print "query"
+
     if 'v' not in keys or 't' not in keys or 'a' not in keys:
         return usage_info
 
