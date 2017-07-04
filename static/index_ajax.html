@@ -7,14 +7,18 @@
         // wait for the DOM to be loaded
         $(function () {
             // bind 'myForm' and provide a simple callback function
-            $('#myForm').ajaxForm(function () {
+            $('#query').ajaxForm(function () {
                 alert("Thank you for your comment!");
+                document.getElementById("queryResult").innerHTML="Hello";
+
             });
         });
     </script>
 </head>
-<form id="myForm" action="/query">
-  Version Code: <input type="text" name="v"><br>
+<body>
+<p>Enter names in the fields, then click "Query" to query the result:</p>
+<form id="query" action="/query">
+  Version Code: <input type="text" name="v" value="700505113"><br>
   Lib Name:
   	<select name="t">
   		<option selected="selected">engine</option>
@@ -23,5 +27,6 @@
   Crash Address: <input type="text" name="a"><br>
   <input type="submit" value="query">
 </form>
-
+<div id="queryResult"></div>
+</body>
 </html>

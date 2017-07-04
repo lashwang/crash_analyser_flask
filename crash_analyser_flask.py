@@ -9,6 +9,11 @@ app = Flask(__name__)
 def hello_world():
     return app.send_static_file('index.html')
 
+@app.route('/new')
+def index_new():
+    return app.send_static_file('index_ajax.html')
+
+
 @app.route('/query')
 def query():
     usage_info = "Unknown parameter, usage: \"http://10.10.10.22:8088/query?t=[engine or proxy]&v=[version code]&a=[address list, like:0x11000,0x20000]\""
