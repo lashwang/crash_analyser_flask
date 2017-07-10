@@ -259,5 +259,8 @@ class ObjFinder(object):
         return query_result
 
 
+    @classmethod
+    def query_full_stack_logs(self,stack_logs):
+        pass
 
 
