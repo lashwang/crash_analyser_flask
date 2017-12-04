@@ -183,7 +183,7 @@ class ObjFinder(object):
             engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
             proxy_obj_path = os.path.join(obj_path, class_.PROXY_OBJ_NAMES)
 
-            #print engine_obj_path,proxy_obj_path
+            print engine_obj_path,proxy_obj_path,local_build_path
 
             if not (os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path)):
                 raise ValueError
