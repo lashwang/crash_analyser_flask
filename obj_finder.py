@@ -41,10 +41,10 @@ class ObjFinder(object):
 
     def __init__(self,version_code = 0,art="adclear_2_0"):
         self.version_code = int(version_code)
+        self.artificial = art
         self.index = {}
         self.index_file = 'index_{}.json'.format(art)
         self.sync_from_server()
-        self.artificial = art
         try:
             os.mkdir(self.__class__.CACHE_FOLDER)
         except Exception,error:
