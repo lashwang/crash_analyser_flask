@@ -28,9 +28,10 @@ def query():
     t = args['t']
     v = args['v']
     a = args['a']
+    art = args['art']
 
     try:
-        obj_finder = ObjFinder(version_code=v)
+        obj_finder = ObjFinder(version_code=v,art=art)
         query_result = obj_finder.query_address(t,a)
     except Exception,error:
         return str(error.message)

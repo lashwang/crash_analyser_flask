@@ -26,24 +26,25 @@ class ObjFinder(object):
     '''
 
 
-    URL = 'http://10.10.10.22:8080/job/adclear_2_0/'
-    URL_BASE = 'http://10.10.10.22:8080'
+    #URL = 'http://10.10.10.22:8080/job/{}/'
+    #URL_BASE = 'http://10.10.10.22:8080'
 
     CACHE_FOLDER = 'caches'
 
-    OBJ_URL_FORMAT = 'http://10.10.10.22:8080/job/adclear_2_0/{}/artifact/adclear/build/outputs/{}'
+    OBJ_URL_FORMAT = 'http://10.10.10.22:8080/job/{}/{}/artifact/adclear/build/outputs/{}'
 
     ENGINE_OBJ_NAMES = 'engine_objs.tar.bz2'
     PROXY_OBJ_NAMES = 'proxy_objs.tar.bz2'
 
-    OBJ_PATH_FORMAT = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/'
+    OBJ_PATH_FORMAT = '/jenkins_jobs/jobs/{}/builds/{}/archive/adclear/build/outputs/'
 
 
-    def __init__(self,version_code = 0,index_file = "index.json"):
+    def __init__(self,version_code = 0,art="adclear_2_0"):
         self.version_code = int(version_code)
         self.index = {}
-        self.index_file = index_file
+        self.index_file = 'index_{}.json'.format(art)
         self.sync_from_server()
+        self.artificial = art
         try:
             os.mkdir(self.__class__.CACHE_FOLDER)
         except Exception,error:
@@ -91,10 +92,10 @@ class ObjFinder(object):
             self.index[build_number] = int(version_code)
 
     def parse_jenkins_local_file(self):
-        next_build_number = int(commands.getstatusoutput('cat /jenkins_jobs/jobs/adclear_2_0/nextBuildNumber')[1])
-        apk_path_format = '/jenkins_jobs/jobs/adclear_2_0/builds/{}/archive/adclear/build/outputs/apk/'
+        next_build_number = int(commands.getstatusoutput('cat /jenkins_jobs/jobs/{}/nextBuildNumber'.format(self.artificial))[1])
+        apk_path_format = '/jenkins_jobs/jobs/{}/builds/{}/archive/adclear/build/outputs/apk/'
         for i in range(next_build_number-200,next_build_number):
-            output = commands.getstatusoutput('ls {}'.format(apk_path_format.format(i)))
+            output = commands.getstatusoutput('ls {}'.format(apk_path_format.format(self.artificial,i)))
             code = output[0]
             if code == 0:
                 apk_file_name = output[1].split('\n')[0]
@@ -178,7 +179,7 @@ class ObjFinder(object):
                 continue
 
             local_build_path = os.path.join(class_.CACHE_FOLDER,index)
-            obj_path = class_.OBJ_PATH_FORMAT.format(index)
+            obj_path = class_.OBJ_PATH_FORMAT.format(self.artificial,index)
             engine_obj_path = os.path.join(obj_path,class_.ENGINE_OBJ_NAMES)
             proxy_obj_path = os.path.join(obj_path, class_.PROXY_OBJ_NAMES)
 
