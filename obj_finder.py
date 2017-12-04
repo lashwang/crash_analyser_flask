@@ -188,6 +188,11 @@ class ObjFinder(object):
             if not (os.path.exists(engine_obj_path) or os.path.exists(proxy_obj_path)):
                 raise ValueError
 
+            try:
+                os.mkdir(local_build_path)
+            except Exception, error:
+                print error
+
             # extract engine file
             with tarfile.open(engine_obj_path, 'r:bz2') as tar:
                 subdir_and_files = [
