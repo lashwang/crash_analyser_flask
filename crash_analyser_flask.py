@@ -30,6 +30,9 @@ def query():
     a = args['a']
     art = args['art']
 
+    if not art:
+        art = "adclear_2_0"
+
     try:
         obj_finder = ObjFinder(version_code=v,art=art)
         query_result = obj_finder.query_address(t,a)
