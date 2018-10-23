@@ -40,7 +40,7 @@ def find_build_number_by_version(version):
     return build_number_list
 
 def verify_local_cache(build_number):
-    cmd = 'find ./caches_adclear_4_0/225/ -name "libproxy.so"'.format(CACHE_FOLDER,build_number)
+    cmd = 'find ./{}/{}/ -name "libproxy.so"'.format(CACHE_FOLDER,build_number)
     output = commands.getstatusoutput(cmd)
     if output[0] == 0:
         print output[1]
