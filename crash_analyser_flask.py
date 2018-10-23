@@ -31,7 +31,7 @@ def query():
     art = args['art']
 
     if not art:
-        art = "adclear_2_0"
+        art = "adclear_4_0"
 
     try:
         obj_finder = ObjFinder(version_code=v,art=art)
