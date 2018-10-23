@@ -43,16 +43,14 @@ def verify_local_cache(build_number):
     cmd = 'find ./{}/{}/ -name "libproxy.so"'.format(CACHE_FOLDER,build_number)
     output = commands.getstatusoutput(cmd)
     if output[0] == 0:
-        print output[1]
-
-
+        if "libproxy.so" not in output[1]:
+            commands.getstatusoutput('rm -rf ./{}/{}/'.format(CACHE_FOLDER,build_number))
+            return False
     return True
 
 def copy_lib_file_to_local(build_number_list):
     if not os.path.exists(CACHE_FOLDER):
         os.mkdir(CACHE_FOLDER)
-
-
 
     # /jenkins_jobs/jobs/adclear_4_0/builds/1/archive/adclear/build/outputs/proxy_objs.tar.bz2
     for build_number in build_number_list:
@@ -75,6 +73,8 @@ def copy_lib_file_to_local(build_number_list):
             ]
             tar.extractall(members=subdir_and_files,path=local_build_path)
 
+
+    
 
 
 def find_address(version='508594',brand='adclear_4_0',lib='proxy',address='0x1bfd44'):
