@@ -34,7 +34,7 @@ def find_build_number_by_version(version):
         code = output[0]
         if code == 0:
             if version in output[1]:
-                build_number_list.append(i)
+                build_number_list.append(str(i))
                 print "find build number ({}) for {}".format(i,version)
 
     return build_number_list
